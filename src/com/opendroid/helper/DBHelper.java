@@ -3,9 +3,6 @@ package com.opendroid.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kyc.models.Customer;
-import com.kyc.models.Model;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+
+import com.opendroid.helper.db.Model;
 
 /**
  * DBHelper v1.0 helper class for database CRUD operation on sqlite database
@@ -23,7 +22,7 @@ import android.util.Log;
 public class DBHelper {
 	private final static String DATABASE_NAME = "centron.db";
 	private final static int DATABASE_VERSION = 1;
-	private static Model TABLE_SCHEMAS[];
+	private static Model models[];
 	private Context context;
 	private SQLiteDatabase db;
 	private SQLiteStatement insertStmt;
@@ -33,7 +32,7 @@ public class DBHelper {
 	public DBHelper(Context context) {
 		this.context = context;
 
-		TABLE_SCHEMAS = new Model[] { new Customer() };
+//		models = new Model[] { new Customer() };
 
 		openHelper = new OpenHelper(this.context);
 		if (db != null) {
@@ -127,7 +126,7 @@ public class DBHelper {
 	 * Clears complete database
 	 */
 	public void delete() {
-		for (Model query : TABLE_SCHEMAS) {
+		for (Model query : getModels()) {
 			this.db.delete(query.getTableName(), null, null);
 		}
 	}
@@ -239,6 +238,14 @@ public class DBHelper {
 
 	}
 
+	public static Model[] getModels() {
+		return models;
+	}
+
+	public static void setModels(Model models[]) {
+		DBHelper.models = models;
+	}
+
 	/*************************************************************/
 
 	private static class OpenHelper extends SQLiteOpenHelper {
@@ -251,7 +258,7 @@ public class DBHelper {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			for (Model query : TABLE_SCHEMAS) {
+			for (Model query : getModels()) {
 				db.execSQL("CREATE TABLE IF NOT EXISTS "
 						+ query.getCreateStatement());
 				
@@ -262,7 +269,7 @@ public class DBHelper {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.d("upgrading database", DATABASE_NAME);
-			for (Model query : TABLE_SCHEMAS) {
+			for (Model query : getModels()) {
 				db.execSQL("DROP TABLE IF EXISTS " + query.getTableName());
 			}
 			onCreate(db);

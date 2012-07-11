@@ -16,9 +16,6 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
-import com.kyc.ui.R;
-import com.kyc.ui.RegisterScreen;
-
 public class BitmapUtils {
 
 	public static Bitmap decodeFile(String fileName) {
@@ -182,10 +179,12 @@ public class BitmapUtils {
 				Logger.info(BitmapUtils.class,
 						"filepath " + file.getAbsolutePath());
 				if (bm == null) {
+					
+					// code here to set empty image
 
-					bm = BitmapFactory.decodeResource(
-							RegisterScreen.context.getResources(),
-							R.drawable.noimage);
+//					bm = BitmapFactory.decodeResource(
+//							RegisterScreen.context.getResources(),
+//							R.drawable.noimage);
 
 				} else {
 					bm.compress(Bitmap.CompressFormat.PNG, 100, outStream);
